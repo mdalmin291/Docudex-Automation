@@ -30,4 +30,29 @@ search_link = wait.until(
 search_link.click()
 
 
+# Generate same dynamic value used during upload
+today = datetime.now().strftime("%d.%m.%Y")
+search_text = f"test_document_pdf_{today}"
+
+search_button = wait.until(
+    EC.presence_of_element_located((By.XPATH, "//button[@type='submit' and contains(@class,'green')]"))
+)
+
+# Wait for input and type value
+search_input = wait.until(
+    EC.presence_of_element_located((By.NAME, "localId"))
+)
+
+search_input.clear()
+search_input.send_keys(search_text)
+
+# Scroll into view
+driver.execute_script("arguments[0].scrollIntoView({block:'center'});", search_button)
+
+# Force click using JavaScript
+driver.execute_script("arguments[0].click();", search_button)
+
+print("✅ Search button clicked successfully")
+
+
 input("Check UI. Press Enter to close browser...")
