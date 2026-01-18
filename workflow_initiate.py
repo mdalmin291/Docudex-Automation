@@ -5,6 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.ui import Select
 from webdriver_manager.chrome import ChromeDriverManager
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
@@ -199,8 +200,46 @@ doc_name_input.send_keys("Aof")
 
 print("✅ Document Name filled")
 
+from selenium.webdriver.support.ui import Select
+
+# 1️⃣ Wait for the Document Type dropdown container
+doc_type_select = wait.until(
+    EC.element_to_be_clickable((By.ID, "metafield"))
+)
+
+# 2️⃣ Use Select class to pick "Account Opening Form (AOF)"
+Select(doc_type_select).select_by_visible_text("Account Opening Form (AOF)")
+print("✅ Document Type selected: Account Opening Form (AOF)")
+
+# Wait for the Done button to be present
+done_button = wait.until(
+    EC.presence_of_element_located((By.XPATH, "//a[contains(@href,'view-active-step') and contains(@class,'btn')]"))
+)
+
+# Scroll into view
+driver.execute_script("arguments[0].scrollIntoView(true);", done_button)
+
+# Click using JS to bypass overlay
+driver.execute_script("arguments[0].click();", done_button)
+
+print("✅ Done button clicked via JS")
 
 
 
+# Wait for any modal overlay to disappear
+wait.until(EC.invisibility_of_element((By.CSS_SELECTOR, "div.modal-scrollable")))
+
+# Now wait for the Done button to appear
+done_button = wait.until(
+    EC.element_to_be_clickable((By.XPATH, "//a[contains(@href,'view-active-step') and contains(@class,'btn')]"))
+)
+
+# Scroll into view just in case
+driver.execute_script("arguments[0].scrollIntoView(true);", done_button)
+
+# Click using JS to avoid overlay issues
+driver.execute_script("arguments[0].click();", done_button)
+
+print("✅ Done button clicked via JS")
 
 input("Check UI. Press Enter to close browser...")
