@@ -6,6 +6,8 @@ from selenium.webdriver.support.ui import Select
 from datetime import datetime
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.common.exceptions import TimeoutException
+
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 wait = WebDriverWait(driver, 20)
@@ -128,6 +130,27 @@ driver.execute_script("arguments[0].scrollIntoView({block:'center'});", create_b
 create_btn.click()
 
 print("✅ Create Document clicked")
+
+# Accept alert
+alert = WebDriverWait(driver, 10).until(EC.alert_is_present())
+print("⚠ Alert appeared:", alert.text)
+alert.accept()
+print("✅ Alert accepted")
+
+# Now handle Bootbox success modal
+success_text = WebDriverWait(driver, 20).until(
+    EC.visibility_of_element_located((By.CLASS_NAME, "bootbox-body"))
+)
+
+print("✅ Success message:", success_text.text)
+
+ok_button = WebDriverWait(driver, 20).until(
+    EC.element_to_be_clickable((By.XPATH, "//div[contains(@class,'bootbox')]//button[text()='OK']"))
+)
+
+driver.execute_script("arguments[0].click();", ok_button)
+print("✅ Success modal OK clicked")
+
 
 
 input("Check UI. Press Enter to close browser...")
