@@ -7,6 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.common.alert import Alert
 from webdriver_manager.chrome import ChromeDriverManager
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
@@ -16,7 +17,7 @@ wait = WebDriverWait(driver, 20)
 driver.get("http://203.76.124.126:5058/login")
 
 # Wait and enter username
-wait.until(EC.presence_of_element_located((By.NAME, "_username"))).send_keys("2979")
+wait.until(EC.presence_of_element_located((By.NAME, "_username"))).send_keys("3769")
 
 # Enter password
 wait.until(EC.presence_of_element_located((By.NAME, "_password"))).send_keys("Ncc@1234")
@@ -30,87 +31,52 @@ wait.until(EC.url_changes("http://203.76.124.126:5058/login"))
 
 print("✅ Successfully logged in")
 
-# Wait for Workflow menu
-workflow_menu = wait.until(
-    EC.presence_of_element_located((By.XPATH, "//a[contains(., 'Workflow')]"))
+driver.get("http://203.76.124.126:5058/workflow/groups-list")
+wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+print("✅ Groups Workflow page loaded")
+
+# Load tracking number from file
+with open("tracking_no.txt", "r") as f:
+    tracking_no = f.read().strip()
+
+print(f"📥 Loaded Tracking Number: {tracking_no}")
+
+# Wait for Tracking input
+tracking_input = wait.until(
+    EC.element_to_be_clickable((By.ID, "form_workflow_filter_workflow"))
 )
 
-# Force open dropdown using JavaScript
-driver.execute_script("arguments[0].click();", workflow_menu)
-print("✅ Workflow menu opened via JS")
+tracking_input.clear()
+tracking_input.send_keys(tracking_no)
+print("✅ Tracking number entered")
 
-# Now wait for New Workflow link
-new_workflow = wait.until(
-    EC.presence_of_element_located((By.XPATH, "//a[contains(@href, '/workflow/template/active-list')]"))
-)
-
-# Force click again using JS
-driver.execute_script("arguments[0].click();", new_workflow)
-
-print("✅ Clicked on New Workflow")
-
-# Wait for the workflow row to appear
-row = wait.until(
-    EC.presence_of_element_located((
+# Click Search
+search_button = wait.until(
+    EC.element_to_be_clickable((
         By.XPATH,
-        "//tr[td[contains(text(),'Account Opening Process (Non-Individual)')]]"
+        "//button[contains(text(),'Search') or contains(text(),'Filter')]"
     ))
 )
 
-print("✅ Workflow row found")
+driver.execute_script("arguments[0].click();", search_button)
+print("✅ Search executed successfully")
 
-# Find the Start button inside this row
-start_button = row.find_element(By.XPATH, ".//a[contains(@class,'start')]")
 
-# Click using JS (more reliable than normal click)
-driver.execute_script("arguments[0].click();", start_button)
-
-print("✅ Start button clicked for Account Opening Process")
-
-# Wait for Bootbox modal to appear
-yes_button = WebDriverWait(driver, 20).until(
-    EC.element_to_be_clickable((By.XPATH, "//button[@data-bb-handler='confirm' and normalize-space()='Yes']"))
+accept_button = wait.until(
+    EC.element_to_be_clickable((By.XPATH, "//a[contains(@class,'accept') and contains(text(),'Accept')]"))
 )
 
-# Click using JS to avoid overlay issues
-driver.execute_script("arguments[0].click();", yes_button)
+driver.execute_script("arguments[0].click();", accept_button)
+print("✅ Accept button clicked")
 
-print("✅ Clicked YES to initiate workflow")
 
-# Wait for form container to load
-wait.until(EC.presence_of_element_located((By.ID, "form_instance_data")))
-
-# Fill Customer Name
-customer_name = wait.until(
-    EC.presence_of_element_located((By.ID, "form_instance_data_1850493788523335680"))
+# Click Confirm inside modal
+confirm_button = wait.until(
+    EC.element_to_be_clickable((By.XPATH, "//a[contains(@class,'confirm')]"))
 )
-customer_name.clear()
-customer_name.send_keys("Test Customer alamin")
+driver.execute_script("arguments[0].click();", confirm_button)
+print("✅ Confirm button clicked")
 
-# Fill Customer ID (CIF)
-customer_id = wait.until(
-    EC.presence_of_element_located((By.ID, "form_instance_data_1850493830621564928"))
-)
-customer_id.clear()
-customer_id.send_keys("CIF-1234")
-
-# Fill Account Number
-account_number = wait.until(
-    EC.presence_of_element_located((By.ID, "form_instance_data_1850493914163712000"))
-)
-account_number.clear()
-account_number.send_keys("AC-6543")
-
-# Fill Account Title
-account_title = wait.until(
-    EC.presence_of_element_located((By.ID, "form_instance_data_1850494046993125376"))
-)
-account_title.clear()
-account_title.send_keys("Savings Account")
-
-print("✅ Workflow initiate form filled successfully")
-
-# Wait for Upload button to be clickable
 upload_button = wait.until(
     EC.element_to_be_clickable((By.ID, "btn_upload_to_staging"))
 )
@@ -131,45 +97,6 @@ try:
 except TimeoutException:
     print("ℹ No browser alert appeared")
 
-# Wait until Upload File(s) button is clickable
-upload_modal_button = wait.until(
-    EC.element_to_be_clickable((By.XPATH, "//a[contains(text(), 'Upload File') or contains(., 'Upload File')]"))
-)
-
-# Click using JS (safer in modals)
-driver.execute_script("arguments[0].scrollIntoView({block:'center'});", upload_modal_button)
-driver.execute_script("arguments[0].click();", upload_modal_button)
-
-print("✅ Upload modal opened")
-
-# Wait until the file input is present in DOM
-file_input = wait.until(
-    EC.presence_of_element_located((By.XPATH, "//input[@type='file' and @name='files[]']"))
-)
-
-# Prepare multiple file paths
-base_path = r"C:\Users\Devnet\Desktop\DocuDex Automation\Demo file Upload for Testing\PDF Folder"
-files = [
-    fr"{base_path}\file-example_PDF_1MB.pdf",
-    fr"{base_path}\file-example_PDF_500_kB.pdf",
-    fr"{base_path}\file-sample_150kB.pdf"
-]
-
-# Attach multiple files
-file_input.send_keys("\n".join(files))
-
-print("✅ Files attached successfully")
-
-final_upload_button = wait.until(
-    EC.element_to_be_clickable((By.ID, "fileupload-save-button"))
-)
-
-# Scroll into view and click via JS
-driver.execute_script("arguments[0].scrollIntoView({block:'center'});", final_upload_button)
-driver.execute_script("arguments[0].click();", final_upload_button)
-
-print("✅ Final upload button clicked")
-
 # Wait until at least one SELECT button is present
 select_buttons = wait.until(
     EC.presence_of_all_elements_located((By.XPATH, "//a[contains(@class,'add') and contains(., 'SELECT')]"))
@@ -188,7 +115,7 @@ doc_id_input = wait.until(
     EC.presence_of_element_located((By.NAME, "localId"))
 )
 doc_id_input.clear()  # Clear any existing text
-doc_id_input.send_keys("Aof")
+doc_id_input.send_keys("TP")
 
 print("✅ Document ID filled")
 
@@ -197,20 +124,18 @@ doc_name_input = wait.until(
     EC.presence_of_element_located((By.ID, "document-title"))
 )
 doc_name_input.clear()
-doc_name_input.send_keys("Aof")
+doc_name_input.send_keys("TP")
 
 print("✅ Document Name filled")
 
-# from selenium.webdriver.support.ui import Select
-
-# 1️⃣ Wait for the Document Type dropdown container
+#  1️⃣ Wait for the Document Type dropdown container
 doc_type_select = wait.until(
     EC.element_to_be_clickable((By.ID, "metafield"))
 )
 
 # 2️⃣ Use Select class to pick "Account Opening Form (AOF)"
-Select(doc_type_select).select_by_visible_text("Account Opening Form (AOF)")
-print("✅ Document Type selected: Account Opening Form (AOF)")
+Select(doc_type_select).select_by_visible_text("Transaction Profile (TP)")
+print("✅ Document Type selected: Transaction Profile (TP)")
 
 create_button = wait.until(
     EC.element_to_be_clickable((By.ID, "create-document-button"))
@@ -244,7 +169,7 @@ print("✅ Done button clicked via JS")
 
 doc_link = wait.until(
     EC.element_to_be_clickable((
-        By.XPATH, "//a[contains(@class,'checklist-document-view') and contains(., 'Account Opening Form')]"
+        By.XPATH, "//a[contains(@class,'checklist-document-view') and contains(., 'Transaction Profile (TP) (TP)')]"
     ))
 )
 
@@ -285,7 +210,7 @@ observation_box = wait.until(
 driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].focus();", observation_box)
 
 # Clear and set the comment safely using JS
-driver.execute_script("arguments[0].value = 'Document added. Proceed forward to Step - 2 (Branch Checker)';", observation_box)
+driver.execute_script("arguments[0].value = 'Checked Proceed forward to Step - 3 (HO Checker)';", observation_box)
 
 # Trigger input/change events so the system recognizes it
 driver.execute_script("""
@@ -316,26 +241,6 @@ try:
 except TimeoutException:
     print("ℹ No confirmation alert appeared")
 
-# Wait for the Workflow Successfully Started table to appear
-workflow_table = wait.until(
-    EC.presence_of_element_located((By.XPATH, "//h3[text()='Workflow Successfully Started']/following-sibling::table"))
-)
-
-# Locate the Tracking Number cell
-tracking_no_element = workflow_table.find_element(
-    By.XPATH, ".//tr[th[text()='Tracking Number:']]/td/span"
-)
-
-# Get the text
-tracking_no = tracking_no_element.text
-print(f"✅ Tracking Number extracted: {tracking_no}")
-
-# Save to file
-with open("tracking_no.txt", "w") as f:
-    f.write(tracking_no)
-
-print("💾 Tracking number saved to tracking_no.txt")
-
 # Open Workflow menu
 workflow_menu = wait.until(
     EC.element_to_be_clickable((By.XPATH, "//a[contains(@class,'dropdown-toggle') and contains(., 'Workflow')]"))
@@ -365,5 +270,4 @@ search_button = wait.until(
 )
 driver.execute_script("arguments[0].click();", search_button)
 print("✅ Search executed, workflow filtered by Tracking Number")
-
 input("Check UI. Press Enter to close browser...")
