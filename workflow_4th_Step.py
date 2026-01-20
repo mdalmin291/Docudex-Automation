@@ -162,15 +162,60 @@ search_button = wait.until(
 driver.execute_script("arguments[0].click();", search_button)
 print("✅ Search executed, workflow filtered by Tracking Number")
 
-# Wait for the History button to be clickable
-history_button = wait.until(
-    EC.element_to_be_clickable((
+# Wait until at least one result row appears after search
+row = wait.until(
+    EC.presence_of_element_located((
         By.XPATH,
-        "//td/a[contains(@class,'hidden-print') and contains(text(),'History')]"
+        "//table//tr[.//a[contains(@href,'/workflow/')]]"
     ))
 )
 
-driver.execute_script("arguments[0].click();", history_button)
-print("✅ History button clicked")
+print("✅ Result row loaded")
+
+
+tracking_no = tracking_no.strip()
+
+tracking_link = wait.until(
+    EC.element_to_be_clickable((
+        By.XPATH,
+        f"//a[@href and normalize-space(text())='{tracking_no}']"
+    ))
+)
+
+driver.execute_script("arguments[0].click();", tracking_link)
+print(f"✅ Clicked tracking number: {tracking_no}")
+
+# Navigate to Document Search page
+driver.get("http://203.76.124.126:5058/documents/")
+wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+print("✅ Search Document page loaded")
+
+
+# Load tracking number from file
+with open("tracking_no.txt", "r") as f:
+    tracking_no = f.read().strip()
+
+print(f"📥 Loaded Tracking Number: {tracking_no}")
+
+# Wait for Tracking input of Completed Workflow Document Search
+tracking_input = wait.until(
+    EC.element_to_be_clickable((By.ID, "typeahead_example_3"))
+)
+
+tracking_input.clear()
+tracking_input.send_keys(tracking_no)
+print("✅ Tracking number entered")
+
+# Click Search
+search_button = wait.until(
+    EC.element_to_be_clickable((
+        By.XPATH,
+        "//button[contains(text(),'Search') or contains(text(),'Filter')]"
+    ))
+)
+
+driver.execute_script("arguments[0].click();", search_button)
+print("✅ Search executed successfully")
+
 
 input("Check UI. Press Enter to close browser...")

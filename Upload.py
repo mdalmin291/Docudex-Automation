@@ -92,9 +92,6 @@ driver.execute_script("arguments[0].click();", save_button)
 
 print("✅ Upload and Save clicked successfully")
 
-
-
-
 input("Check UI. Press Enter to close browser...")
 
 
