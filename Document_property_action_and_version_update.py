@@ -381,6 +381,8 @@ driver.execute_script("arguments[0].click();", upload_version_btn_new)
 print("✅ Upload 2nd New Version clicked")
 
 
+
+
 # Provide full path of the second file
 file_path_2 = r"C:\Users\Devnet\Desktop\DocuDex Automation\Demo file Upload for Testing\PDF Folder\file-example_PDF_1MB.pdf"
 
@@ -391,6 +393,9 @@ file_input_2 = wait.until(
 file_input_2.send_keys(file_path_2)
 print("✅ 2nd File uploaded successfully")
 time.sleep(2)
+
+
+input("Check UI. Press Enter to close browser...")
 
 
 # 1️⃣ Select "Merge this with latest version"
