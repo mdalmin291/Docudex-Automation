@@ -447,42 +447,6 @@ print("✅ Save clicked for new version")
 
 input("Check UI. Press Enter to close browser...")
 
-# # 1️⃣ Select "Merge this with latest version"
-# merge_radio = wait.until(
-#     EC.element_to_be_clickable((By.XPATH, "//input[@name='upload_type' and @value='merge']"))
-# )
-# driver.execute_script("arguments[0].click();", merge_radio)
-# print("✅ Selected 'Merge this with latest version'")
-# time.sleep(1)
-
-# # 2️⃣ Select "End of the document"
-# end_radio = wait.until(
-#     EC.element_to_be_clickable((By.XPATH, "//input[@name='merge_position' and @value='end']"))
-# )
-# driver.execute_script("arguments[0].click();", end_radio)
-# print("✅ Selected 'End of the document'")
-# time.sleep(1)
-
-# # 3️⃣ Select "Minor changes (2.1)"
-# minor_radio = wait.until(
-#     EC.element_to_be_clickable((By.XPATH, "//input[@name='next_version' and @value='minor']"))
-# )
-# driver.execute_script("arguments[0].click();", minor_radio)
-# print("✅ Selected 'Minor changes (2.1)'")
-# time.sleep(1)
-
-# # 4️⃣ Add comment
-# comment_box = wait.until(
-#     EC.visibility_of_element_located((By.NAME, "notes"))
-# )
-# comment_box.clear()
-# comment_box.send_keys("Document has been mergered at the end of the document as Minor changes Version")
-# print("✅ Comment added")
-# time.sleep(1)
-
-
-input("Check UI. Press Enter to close browser...")
-
 
 
 
