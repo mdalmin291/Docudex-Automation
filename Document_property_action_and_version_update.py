@@ -28,23 +28,10 @@ time.sleep(2)
 
 
 # Step 3: Click Documents menu
-documents_menu = wait.until(
-    EC.element_to_be_clickable((By.XPATH, "//a[contains(., 'Documents')]"))
-)
-documents_menu.click()
+driver.get("http://203.76.124.126:5058/documents/upload")
+wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
 time.sleep(2)
 
-
-# Step 4: Click Upload Document
-upload_link = wait.until(
-    EC.element_to_be_clickable((By.XPATH, "//a[contains(@href, '/documents/upload')]"))
-)
-upload_link.click()
-time.sleep(2)
-
-
-# Step 5: Confirm upload page loaded
-wait.until(EC.url_contains("/documents/upload"))
 # File full path (Windows path must be raw string or double backslashes)
 file_path = r"C:\Users\Devnet\Desktop\DocuDex Automation\Demo file Upload for Testing\PDF Folder\file-sample_150kB.pdf"
 
@@ -316,17 +303,24 @@ time.sleep(2)
 wait.until(EC.invisibility_of_element_located((By.ID, "Edit-Properties")))
 print("✅ Modal closed — Save confirmed")
 
-# New Version Upload
+
+# Wait until DOM is stable after modal close
+time.sleep(1)
+
+# Re-locate fresh element
 upload_version_btn = wait.until(
-    EC.element_to_be_clickable((
-        By.XPATH,
-        "//a[.//text()[contains(., 'Upload New Version')]]"
+    EC.presence_of_element_located((
+        By.XPATH, "//a[.//text()[contains(., 'Upload New Version')]]"
     ))
 )
 
-driver.execute_script("arguments[0].scrollIntoView({block:'center'});", upload_version_btn)
-time.sleep(1)
+# Wait until clickable
+wait.until(EC.element_to_be_clickable((
+    By.XPATH, "//a[.//text()[contains(., 'Upload New Version')]]"
+)))
 
+# Click safely
+driver.execute_script("arguments[0].scrollIntoView({block:'center'});", upload_version_btn)
 driver.execute_script("arguments[0].click();", upload_version_btn)
 
 print("✅ Upload New Version clicked")
@@ -392,19 +386,19 @@ file_input_2 = wait.until(
 
 file_input_2.send_keys(file_path_2)
 print("✅ 2nd File uploaded successfully")
-time.sleep(2)
+time.sleep(5)
 
 
-input("Check UI. Press Enter to close browser...")
-
-
-# 1️⃣ Select "Merge this with latest version"
-merge_radio = wait.until(
-    EC.element_to_be_clickable((By.XPATH, "//input[@name='upload_type' and @value='merge']"))
+merge_radio = WebDriverWait(driver, 60).until(
+    EC.element_to_be_clickable((
+        By.XPATH,
+        "//label[contains(normalize-space(),'Merge this with latest version')]"
+    ))
 )
+
 driver.execute_script("arguments[0].click();", merge_radio)
-print("✅ Selected 'Merge this with latest version'")
-time.sleep(1)
+print("✅ Selected merge via label")
+
 
 # 2️⃣ Select "End of the document"
 end_radio = wait.until(
