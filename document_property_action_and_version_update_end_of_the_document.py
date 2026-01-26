@@ -400,18 +400,26 @@ driver.execute_script("arguments[0].click();", merge_radio)
 print("✅ Selected merge via label")
 
 
-# 2️⃣ Select "End of the document"
-end_radio = wait.until(
-    EC.element_to_be_clickable((By.XPATH, "//input[@name='merge_position' and @value='end']"))
+# Wait until "End of the document" label appears AFTER merge is selected
+end_radio = WebDriverWait(driver, 60).until(
+    EC.element_to_be_clickable((
+        By.XPATH,
+        "//label[contains(normalize-space(),'End of the document')]"
+    ))
 )
+
 driver.execute_script("arguments[0].click();", end_radio)
 print("✅ Selected 'End of the document'")
 time.sleep(1)
 
 # 3️⃣ Select "Minor changes (2.1)"
-minor_radio = wait.until(
-    EC.element_to_be_clickable((By.XPATH, "//input[@name='next_version' and @value='minor']"))
+minor_radio = WebDriverWait(driver, 60).until(
+    EC.element_to_be_clickable((
+        By.XPATH,
+        "//label[contains(normalize-space(),'Minor changes')]"
+    ))
 )
+
 driver.execute_script("arguments[0].click();", minor_radio)
 print("✅ Selected 'Minor changes (2.1)'")
 time.sleep(1)
