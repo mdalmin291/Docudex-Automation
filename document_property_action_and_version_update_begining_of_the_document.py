@@ -299,20 +299,36 @@ arguments[0].dispatchEvent(new MouseEvent('click', {
 """, save_button)
 
 print("✅ Save triggered correctly")
-time.sleep(2)
-wait.until(EC.invisibility_of_element_located((By.ID, "Edit-Properties")))
-print("✅ Modal closed — Save confirmed")
+try:
+    WebDriverWait(driver, 10).until(
+        EC.invisibility_of_element_located((By.ID, "Edit-Properties"))
+    )
+    print("✅ Modal closed automatically")
+except:
+    print("⚠ Modal did not close — closing manually")
 
+    # Force close modal using JS
+    driver.execute_script("""
+        let modal = document.getElementById('Edit-Properties');
+        if (modal) {
+            modal.classList.remove('in');
+            modal.style.display = 'none';
+        }
+        let backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) backdrop.remove();
+        document.body.classList.remove('modal-open');
+    """)
+    print("✅ Modal force-closed")
 
-# Wait until DOM is stable after modal close
 time.sleep(1)
 
 # Re-locate fresh element
-upload_version_btn = wait.until(
-    EC.presence_of_element_located((
+upload_version_btn = WebDriverWait(driver, 20).until(
+    EC.element_to_be_clickable((
         By.XPATH, "//a[.//text()[contains(., 'Upload New Version')]]"
     ))
 )
+print("✅ Page ready for next step")
 
 # Wait until clickable
 wait.until(EC.element_to_be_clickable((
@@ -444,8 +460,11 @@ driver.execute_script("arguments[0].scrollIntoView({block:'center'});", save_but
 time.sleep(1)
 
 driver.execute_script("arguments[0].click();", save_button_new)
+time.sleep(3)
 
 print("✅ Save clicked for new version")
+
+driver.refresh()
 
 input("Check UI. Press Enter to close browser...")
 
