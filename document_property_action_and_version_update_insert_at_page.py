@@ -399,19 +399,37 @@ merge_radio = WebDriverWait(driver, 60).until(
 driver.execute_script("arguments[0].click();", merge_radio)
 print("✅ Selected merge via label")
 
+time.sleep(3)
 
-# Wait until "End of the document" label appears AFTER merge is selected
-end_radio = WebDriverWait(driver, 60).until(
-    EC.element_to_be_clickable((
-        By.XPATH,
-        "//label[contains(normalize-space(),'End of the document')]"
-    ))
+# Wait for merge options to load
+WebDriverWait(driver, 60).until(
+    EC.presence_of_element_located((By.XPATH, "//label[contains(., 'All Pages')]"))
 )
 
-driver.execute_script("arguments[0].click();", end_radio)
-print("✅ Selected 'End of the document'")
+# Click All Pages
+all_pages_label = WebDriverWait(driver, 30).until(
+    EC.element_to_be_clickable((By.XPATH, "//label[contains(normalize-space(), 'All Pages')]"))
+)
+driver.execute_script("arguments[0].click();", all_pages_label)
+print("✅ Selected 'All Pages'")
 time.sleep(1)
 
+# Click After page
+after_page_label = WebDriverWait(driver, 30).until(
+    EC.element_to_be_clickable((By.XPATH, "//label[contains(normalize-space(), 'After page')]"))
+)
+driver.execute_script("arguments[0].click();", after_page_label)
+print("✅ Selected 'After page'")
+time.sleep(1)
+
+# Enter page number
+page_input = WebDriverWait(driver, 30).until(
+    EC.element_to_be_clickable((By.XPATH, "//input[@name='insert_after_page']"))
+)
+page_input.clear()
+page_input.send_keys("3")
+print("✅ Page number entered: 3")
+time.sleep(1)
 # 3️⃣ Select "Minor changes (2.1)"
 minor_radio = WebDriverWait(driver, 60).until(
     EC.element_to_be_clickable((
