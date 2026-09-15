@@ -1,3 +1,4 @@
+from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -55,7 +56,7 @@ print("✅ Clicked on New Workflow")
 row = wait.until(
     EC.presence_of_element_located((
         By.XPATH,
-        "//tr[td[contains(text(),'Term deposit : Non-Individual (Conventional)_{LOU-5}')]]"
+        "//tr[td[contains(text(),'Term deposit : Individual (Conventional)_{LOU-5}')]]"
     ))
 )
 
@@ -67,7 +68,7 @@ start_button = row.find_element(By.XPATH, ".//a[contains(@class,'start')]")
 # Click using JS (more reliable than normal click)
 driver.execute_script("arguments[0].click();", start_button)
 
-print("✅ Start button clicked for Term deposit : Non-Individual (Conventional) {LOU-5}')")
+print("✅ Start button clicked for Term deposit : Individual (Conventional) {LOU-5}')")
 
 # Wait for Bootbox modal to appear
 yes_button = WebDriverWait(driver, 20).until(
@@ -83,38 +84,9 @@ print("✅ Clicked YES to initiate workflow")
 wait.until(EC.presence_of_element_located((By.ID, "form_instance_data")))
 
 
-# Select "Quick Account" from Account Type dropdown
-select_element = driver.find_element(By.ID, "form_instance_data_1908875805849554944")
-driver.execute_script("""
-    var select = arguments[0];
-    select.value = 'Quick Account';
-    $(select).trigger('change');
-""", select_element)
-print("✅ Selected 'Quick Account' from Account Type dropdown")
 
-
-
-# Account number selection
-account_number = wait.until(
-    EC.presence_of_element_located((By.ID, "form_instance_data_1908874115079475200"))
-)
-account_number.clear()
-account_number.send_keys("1234567891012")
-print("✅ Account Number filled: 1234567891012")
-
-# Account Title selection
-account_title = wait.until(
-    EC.presence_of_element_located((By.ID, "form_instance_data_1908875743799021568"))
-)
-account_title.clear()
-account_title.send_keys("test account")
-print("✅ Account Title filled: test account")
-
-
-
-
-# Select "New Customer" from Application For dropdown
-select_element = driver.find_element(By.ID, "form_instance_data_1921210728325320704")
+# Select "Application for" from dropdown
+select_element = driver.find_element(By.ID, "form_instance_data_1921633290121383936")
 driver.execute_script("""
     var select = arguments[0];
     select.value = 'New Customer';
@@ -122,18 +94,60 @@ driver.execute_script("""
 """, select_element)
 print("✅ Selected 'New Customer' from Application For dropdown")
 
-# Customer Name selection
+
+
+# Select "Quick Account" from Account Type dropdown
+select_element = driver.find_element(By.ID, "form_instance_data_1921637425902260224")
+driver.execute_script("""
+    var select = arguments[0];
+    select.value = 'Quick A/C';
+    $(select).trigger('change');
+""", select_element)
+print("✅ Selected 'Quick A/C' from Account Type dropdown")
+
+
+
+# Account number selection
+account_number = wait.until(
+    EC.presence_of_element_located((By.ID, "form_instance_data_1921635861745635328"))
+)
+account_number.clear()
+account_number.send_keys("1234567891012")
+print("✅ Account Number filled: 1234567891012")
+
+
+# Account Opening date - fill with today's current date
+today_date = datetime.now().strftime("%d-%m-%Y") 
+account_opening_date = wait.until(
+    EC.presence_of_element_located((By.ID, "form_instance_data_1921640331036594176"))
+)
+account_opening_date.clear()
+account_opening_date.send_keys(today_date)
+print(f"✅ Account Opening Date filled: {today_date}")
+
+
+
+# Account Title selection
 account_title = wait.until(
-    EC.presence_of_element_located((By.ID, "form_instance_data_1908507833616306176"))
+    EC.presence_of_element_located((By.ID, "form_instance_data_1921634213681958912"))
 )
 account_title.clear()
-account_title.send_keys("test customer")
-print("✅ Account Title filled: test customer")
+account_title.send_keys("test account")
+print("✅ Account Title filled: test account")
 
+
+
+# Customer Name selection
+customer_name = wait.until(
+    EC.presence_of_element_located((By.ID, "form_instance_data_1921635098386501632"))
+)
+customer_name.clear()
+customer_name.send_keys("test customer")
+print("✅ Customer Name filled: test customer")
 
 
 # Select "Customer Type" In dropdown
-select_element = driver.find_element(By.ID, "form_instance_data_1908875910568742912")
+select_element = driver.find_element(By.ID, "form_instance_data_1921637846993604608")
 driver.execute_script("""
     var select = arguments[0];
     select.value = 'WBD';
@@ -141,28 +155,30 @@ driver.execute_script("""
 """, select_element)
 print("✅ Selected 'WBD' from Customer Type dropdown")
 
-# Select "Account Product Type" In dropdown
-select_element = driver.find_element(By.ID, "form_instance_data_1908876524094754816")
+# Select "Customer Account Type" In dropdown
+select_element = driver.find_element(By.ID, "form_instance_data_1921643014694899712")
 driver.execute_script("""
     var select = arguments[0];
-    select.value = 'MTB - Regular Savings';
+    select.value = 'Joint Account Holders';
     $(select).trigger('change');
 """, select_element)
-print("✅ Selected 'MTB - Regular Savings' from Account Product Type dropdown")
+print("✅ Selected 'Joint Account Holders' from Customer Account Type dropdown")
 
-# Select "Types of Account" In dropdown
-select_element = driver.find_element(By.ID, "form_instance_data_1909241892827041792")
+
+# Select "Account Product Type" In dropdown
+select_element = driver.find_element(By.ID, "form_instance_data_1921643591113904128")
 driver.execute_script("""
     var select = arguments[0];
-    select.value = 'Current';
+    select.value = 'Monthly Benefit plan';
     $(select).trigger('change');
 """, select_element)
-print("✅ Selected 'Current' from Types of Account dropdown")
+print("✅ Selected 'Monthly Benefit plan' from Account Product Type dropdown")
+
 
 
 
 # Select "Debit Card Requisition" In dropdown
-select_element = driver.find_element(By.ID, "form_instance_data_1919014023852986368")
+select_element = driver.find_element(By.ID, "form_instance_data_1921671218134519808")
 driver.execute_script("""
     var select = arguments[0];
     select.value = 'Yes';
@@ -171,7 +187,7 @@ driver.execute_script("""
 print("✅ Selected 'Yes' from Debit Card Requisition dropdown")
 
 # Select "Check Book Requisition" In dropdown
-select_element = driver.find_element(By.ID, "form_instance_data_1919014131931811840")
+select_element = driver.find_element(By.ID, "form_instance_data_1921671582804086784")
 driver.execute_script("""
     var select = arguments[0];
     select.value = 'Yes';
@@ -179,14 +195,17 @@ driver.execute_script("""
 """, select_element)
 print("✅ Selected 'Yes' from Check Book Requisition dropdown")
 
-# Select "Deferral Approval Authority" In dropdown
-select_element = driver.find_element(By.ID, "form_instance_data_1938863741982478336")
+# Select "Allow Internet Banking" In dropdown
+select_element = driver.find_element(By.ID, "form_instance_data_1921671899406929920")
 driver.execute_script("""
     var select = arguments[0];
-    select.value = 'HoMOD';
+    select.value = 'Yes';
     $(select).trigger('change');
 """, select_element)
-print("✅ Selected 'HoMOD' from Deferral Approval Authority dropdown")
+print("✅ Selected 'Yes' from Allow Internet Banking dropdown")
+
+
+
 
 
 # Wait for Upload button to be clickable
@@ -263,10 +282,10 @@ print("✅ First file SELECT clicked")
 doc_type_select = driver.find_element(By.ID, "metafield")
 driver.execute_script("""
     var select = arguments[0];
-    select.value = '1922674461815869440';
+    select.value = '1925909755029622784';
     $(select).trigger('change');
 """, doc_type_select)
-print("✅ Document Type selected: aof (Account Opening Form)")
+print("✅ Document Type selected: AOF (Account Opening Form)")
 
 create_button = wait.until(
     EC.element_to_be_clickable((By.ID, "create-document-button"))
@@ -384,7 +403,7 @@ observation_box = wait.until(
 driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].focus();", observation_box)
 
 # Clear and set the comment safely using JS
-driver.execute_script("arguments[0].value = 'Document added. Proceed forward to Step - 2 (Authorizer-Branch)';", observation_box)
+driver.execute_script("arguments[0].value = 'Document added. Proceed forward to Step - 2 Branch DM (LOU)';", observation_box)
 
 # Trigger input/change events so the system recognizes it
 driver.execute_script("""
@@ -569,7 +588,7 @@ confirm_button = wait.until(
     EC.element_to_be_clickable((By.XPATH, "//a[contains(@class,'confirm')]"))
 )
 driver.execute_script("arguments[0].click();", confirm_button)
-print("✅ Confirm button clicked")
+print("✅ Confirm button clicked")  
 
 sleep(5)
 
@@ -583,7 +602,7 @@ observation_box = wait.until(
 driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].focus();", observation_box)
 
 # Clear and set the comment safely using JS
-driver.execute_script("arguments[0].value = 'Proced forward to ICSU (HO)';", observation_box)
+driver.execute_script("arguments[0].value = 'Proced forward to Distributor (LOD)';", observation_box)
 
 # Trigger input/change events so the system recognizes it
 driver.execute_script("""
@@ -729,7 +748,7 @@ observation_box = wait.until(
 driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].focus();", observation_box)
 
 # Clear and set the comment safely using JS
-driver.execute_script("arguments[0].value = 'Proced forward to Distributor (HO)';", observation_box)
+driver.execute_script("arguments[0].value = 'Proced forward to Assessor (LOD)';", observation_box)
 
 # Trigger input/change events so the system recognizes it
 driver.execute_script("""
@@ -833,14 +852,8 @@ driver.execute_script("arguments[0].click();", confirm_button)
 print("✅ Confirm button clicked")
 
 
-# Select "Requirement Placement" from Application For dropdown
-select_element = driver.find_element(By.ID, "form_instance_data_1920460286523871232")
-driver.execute_script("""
-    var select = arguments[0];
-    select.value = 'Yes';
-    $(select).trigger('change');
-""", select_element)
-print("✅ Selected 'Yes' from Application For dropdown")
+
+
 
 # Wait for the observation textarea to be present
 observation_box = wait.until(
@@ -852,7 +865,7 @@ observation_box = wait.until(
 driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].focus();", observation_box)
 
 # Clear and set the comment safely using JS
-driver.execute_script("arguments[0].value = 'Proced forward to Assessor (HO)';", observation_box)
+driver.execute_script("arguments[0].value = 'Proced forward to Data Entry Officer (LOD)';", observation_box)
 
 # Trigger input/change events so the system recognizes it
 driver.execute_script("""
@@ -958,16 +971,7 @@ print("✅ Confirm button clicked")
 
 # CIF number selection
 Cif_number = wait.until(
-    EC.presence_of_element_located((By.ID, "form_instance_data_1921324091780894720"))
-)
-Cif_number.clear()
-Cif_number.send_keys("12345")
-print("✅ CIF Number filled: 12345")
-
-
-# Confirm CIF number selection
-Cif_number = wait.until(
-    EC.presence_of_element_located((By.ID, "form_instance_data_1921324318051012608"))
+    EC.presence_of_element_located((By.ID, "form_instance_data_1921633941589069824"))
 )
 Cif_number.clear()
 Cif_number.send_keys("12345")
@@ -975,12 +979,12 @@ print("✅ CIF Number filled: 12345")
 
 
 # Confirm Account number selection
-Cif_number = wait.until(
-    EC.presence_of_element_located((By.ID, "form_instance_data_1921324924367015936"))
+confirm_account_number = wait.until(
+    EC.presence_of_element_located((By.ID, "form_instance_data_1921636228344582144"))
 )
-Cif_number.clear()
-Cif_number.send_keys("1234567891012")
-print("✅ CIF Number filled: 1234567891012")
+confirm_account_number.clear()
+confirm_account_number.send_keys("1234567891012")
+print("✅ Confirm Account Number filled: 1234567891012")
 
 # Wait for the observation textarea to be present
 observation_box = wait.until(
@@ -992,7 +996,7 @@ observation_box = wait.until(
 driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].focus();", observation_box)
 
 # Clear and set the comment safely using JS
-driver.execute_script("arguments[0].value = 'Proced forward to Data Entry Officer (HO)';", observation_box)
+driver.execute_script("arguments[0].value = 'Proced forward to Authorizer (LOD)';", observation_box)
 
 # Trigger input/change events so the system recognizes it
 driver.execute_script("""
@@ -1102,7 +1106,7 @@ observation_box = wait.until(
 driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].focus();", observation_box)
 
 # Clear and set the comment safely using JS
-driver.execute_script("arguments[0].value = 'Proced forward to Authorizer (HO)';", observation_box)
+driver.execute_script("arguments[0].value = 'Proced forward to DEE ( Correspondence Unit)';", observation_box)
 
 # Trigger input/change events so the system recognizes it
 driver.execute_script("""
@@ -1215,7 +1219,7 @@ observation_box = wait.until(
 driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].focus();", observation_box)
 
 # Clear and set the comment safely using JS
-driver.execute_script("arguments[0].value = 'Proced forward to DEE(Correspondence Unit)(HO)';", observation_box)
+driver.execute_script("arguments[0].value = 'Proced forward to Correspondence unit';", observation_box)
 
 # Trigger input/change events so the system recognizes it
 driver.execute_script("""
@@ -1337,15 +1341,16 @@ arguments[0].dispatchEvent(new Event('change', { bubbles: true }));
 print("✅ Comment added in observation box")
 
 
-# Wait for the 'Send Backward' button to be clickable
-proced_forward_button = wait.until(
-    EC.element_to_be_clickable((By.XPATH, "//button[contains(text(),'Proceed Forward')]"))
+# Wait for the 'Complete Workflow' button to be clickable
+Complete_button = wait.until(
+    EC.element_to_be_clickable((By.XPATH, "//button[contains(text(),'Complete Workflow')]"))
 )
 
 # Scroll into view and click via JS
-driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].click();", proced_forward_button)
+driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].click();", Complete_button)
 
-print("✅ 'Proceed Forward' button clicked successfully")
+print("✅ 'Complete Workflow' button clicked successfully")
+
 
 # Wait for the confirmation alert
 try:

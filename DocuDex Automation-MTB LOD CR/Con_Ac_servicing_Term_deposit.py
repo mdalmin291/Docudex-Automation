@@ -1,3 +1,4 @@
+from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -55,7 +56,7 @@ print("✅ Clicked on New Workflow")
 row = wait.until(
     EC.presence_of_element_located((
         By.XPATH,
-        "//tr[td[contains(text(),'Transactional Account : Servicing_(Conventional)_{LOU-7}')]]"
+        "//tr[td[contains(text(),'Term deposit : Servicing (Conventional)_{LOU-8}')]]"
     ))
 )
 
@@ -67,7 +68,7 @@ start_button = row.find_element(By.XPATH, ".//a[contains(@class,'start')]")
 # Click using JS (more reliable than normal click)
 driver.execute_script("arguments[0].click();", start_button)
 
-print("✅ Start button clicked for Transactional Account : Servicing_(Conventional) {LOU-7}')")
+print("✅ Start button clicked for Term deposit : Servicing (Conventional)_{LOU-8}')")
 
 # Wait for Bootbox modal to appear
 yes_button = WebDriverWait(driver, 20).until(
@@ -83,110 +84,77 @@ print("✅ Clicked YES to initiate workflow")
 wait.until(EC.presence_of_element_located((By.ID, "form_instance_data")))
 
 
-# Select "Quick Account" from Account Type dropdown
-select_element = driver.find_element(By.ID, "form_instance_data_1908875805849554944")
-driver.execute_script("""
-    var select = arguments[0];
-    select.value = 'Quick Account';
-    $(select).trigger('change');
-""", select_element)
-print("✅ Selected 'Quick Account' from Account Type dropdown")
-
-
-
 # Account number selection
 account_number = wait.until(
-    EC.presence_of_element_located((By.ID, "form_instance_data_1908874115079475200"))
+    EC.presence_of_element_located((By.ID, "form_instance_data_1925855841894797312"))
 )
 account_number.clear()
 account_number.send_keys("1234567891012")
 print("✅ Account Number filled: 1234567891012")
 
-# Account Title selection
-account_title = wait.until(
-    EC.presence_of_element_located((By.ID, "form_instance_data_1908875743799021568"))
+# Customer Name selection
+customer_name = wait.until(
+    EC.presence_of_element_located((By.ID, "form_instance_data_1925856242241114112"))
 )
-account_title.clear()
-account_title.send_keys("test account")
-print("✅ Account Title filled: test account")
+customer_name.clear()
+customer_name.send_keys("test customer")
+print("✅ Customer Name filled: test customer")
+
+# Cif Number Entry
+cif_no = wait.until(
+    EC.presence_of_element_located((By.ID, "form_instance_data_1925856277611679744"))
+)
+cif_no.clear()
+cif_no.send_keys("123456")
+print("✅ Cif Number filled: 123456")
 
 
+# # Account Opening date - fill with today's current date
+# today_date = datetime.now().strftime("%d-%m-%Y") 
+# account_opening_date = wait.until(
+#     EC.presence_of_element_located((By.ID, "form_instance_data_1925753665398771712"))
+# )
+# account_opening_date.clear()
+# account_opening_date.send_keys(today_date)
+# print(f"✅ Account Opening Date filled: {today_date}")
 
-
-# Select "New Customer" from Application For dropdown
-select_element = driver.find_element(By.ID, "form_instance_data_1921210728325320704")
+# Select "Account Type" from Account Type dropdown
+select_element = driver.find_element(By.ID, "form_instance_data_1925863989816856576")
 driver.execute_script("""
     var select = arguments[0];
-    select.value = 'New Customer';
+    select.value = 'Quick A/C';
     $(select).trigger('change');
 """, select_element)
-print("✅ Selected 'New Customer' from Application For dropdown")
+print("✅ Selected 'Quick A/C' from Account Type dropdown")
 
-# Customer Name selection
-account_title = wait.until(
-    EC.presence_of_element_located((By.ID, "form_instance_data_1908507833616306176"))
-)
-account_title.clear()
-account_title.send_keys("test customer")
-print("✅ Account Title filled: test customer")
-
+# Select "Service Request Type" In dropdown
+select_element = driver.find_element(By.ID, "form_instance_data_1925864197535567872")
+driver.execute_script("""
+    var select = arguments[0];
+    select.value = 'Photograph of Nominee';
+    $(select).trigger('change');
+""", select_element)
+print("✅ Selected 'Photograph of Nominee' from Service Request Type dropdown")
 
 
 # Select "Customer Type" In dropdown
-select_element = driver.find_element(By.ID, "form_instance_data_1908875910568742912")
+select_element = driver.find_element(By.ID, "form_instance_data_1925864816489009152")
 driver.execute_script("""
     var select = arguments[0];
-    select.value = 'WBD';
+    select.value = 'Individuals/ Joint Account Holders';
     $(select).trigger('change');
 """, select_element)
-print("✅ Selected 'WBD' from Customer Type dropdown")
+print("✅ Selected 'Individuals/ Joint Account Holders' from Customer Type dropdown")
+
 
 # Select "Account Product Type" In dropdown
-select_element = driver.find_element(By.ID, "form_instance_data_1908876524094754816")
+select_element = driver.find_element(By.ID, "form_instance_data_1925865052796096512")
 driver.execute_script("""
     var select = arguments[0];
-    select.value = 'MTB - Regular Savings';
+    select.value = 'Monthly Benefit plan';
     $(select).trigger('change');
 """, select_element)
-print("✅ Selected 'MTB - Regular Savings' from Account Product Type dropdown")
-
-# Select "Types of Account" In dropdown
-select_element = driver.find_element(By.ID, "form_instance_data_1909241892827041792")
-driver.execute_script("""
-    var select = arguments[0];
-    select.value = 'Current';
-    $(select).trigger('change');
-""", select_element)
-print("✅ Selected 'Current' from Types of Account dropdown")
-
-
-
-# Select "Debit Card Requisition" In dropdown
-select_element = driver.find_element(By.ID, "form_instance_data_1919014023852986368")
-driver.execute_script("""
-    var select = arguments[0];
-    select.value = 'Yes';
-    $(select).trigger('change');
-""", select_element)
-print("✅ Selected 'Yes' from Debit Card Requisition dropdown")
-
-# Select "Check Book Requisition" In dropdown
-select_element = driver.find_element(By.ID, "form_instance_data_1919014131931811840")
-driver.execute_script("""
-    var select = arguments[0];
-    select.value = 'Yes';
-    $(select).trigger('change');
-""", select_element)
-print("✅ Selected 'Yes' from Check Book Requisition dropdown")
-
-# Select "Deferral Approval Authority" In dropdown
-select_element = driver.find_element(By.ID, "form_instance_data_1938863741982478336")
-driver.execute_script("""
-    var select = arguments[0];
-    select.value = 'HoMOD';
-    $(select).trigger('change');
-""", select_element)
-print("✅ Selected 'HoMOD' from Deferral Approval Authority dropdown")
+print("✅ Selected 'Monthly Benefit plan' from Customer  Type individual dropdown")
 
 
 # Wait for Upload button to be clickable
@@ -263,10 +231,10 @@ print("✅ First file SELECT clicked")
 doc_type_select = driver.find_element(By.ID, "metafield")
 driver.execute_script("""
     var select = arguments[0];
-    select.value = '1922674461815869440';
+    select.value = '1925871199485693952';
     $(select).trigger('change');
 """, doc_type_select)
-print("✅ Document Type selected: aof (Account Opening Form)")
+print("✅ Document Type selected: Rent receipt of the shop (if the shop is rental)")
 
 create_button = wait.until(
     EC.element_to_be_clickable((By.ID, "create-document-button"))
@@ -301,7 +269,7 @@ print("✅ Done button clicked via JS")
 
 doc_link = wait.until(
     EC.element_to_be_clickable((
-        By.XPATH, "//a[contains(@class,'checklist-document-view') and contains(., 'AOF (Account Opening Form)')]"
+        By.XPATH, "//a[contains(@class,'checklist-document-view') and contains(., 'Rent receipt of the shop (if the shop is rental)')]"
     ))
 )
 
@@ -384,7 +352,7 @@ observation_box = wait.until(
 driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].focus();", observation_box)
 
 # Clear and set the comment safely using JS
-driver.execute_script("arguments[0].value = 'Document added. Proceed forward to Step - 2 (Authorizer-Branch)';", observation_box)
+driver.execute_script("arguments[0].value = 'Document added. Proceed forward to Step - 2 Branch DM (LOU)';", observation_box)
 
 # Trigger input/change events so the system recognizes it
 driver.execute_script("""
@@ -569,7 +537,7 @@ confirm_button = wait.until(
     EC.element_to_be_clickable((By.XPATH, "//a[contains(@class,'confirm')]"))
 )
 driver.execute_script("arguments[0].click();", confirm_button)
-print("✅ Confirm button clicked")
+print("✅ Confirm button clicked")  
 
 sleep(5)
 
@@ -583,7 +551,7 @@ observation_box = wait.until(
 driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].focus();", observation_box)
 
 # Clear and set the comment safely using JS
-driver.execute_script("arguments[0].value = 'Proced forward to ICSU (HO)';", observation_box)
+driver.execute_script("arguments[0].value = 'Proced forward to Distributor (LOD)';", observation_box)
 
 # Trigger input/change events so the system recognizes it
 driver.execute_script("""
@@ -729,7 +697,7 @@ observation_box = wait.until(
 driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].focus();", observation_box)
 
 # Clear and set the comment safely using JS
-driver.execute_script("arguments[0].value = 'Proced forward to Distributor (HO)';", observation_box)
+driver.execute_script("arguments[0].value = 'Proced forward to Assessor (LOD)';", observation_box)
 
 # Trigger input/change events so the system recognizes it
 driver.execute_script("""
@@ -833,14 +801,8 @@ driver.execute_script("arguments[0].click();", confirm_button)
 print("✅ Confirm button clicked")
 
 
-# Select "Requirement Placement" from Application For dropdown
-select_element = driver.find_element(By.ID, "form_instance_data_1920460286523871232")
-driver.execute_script("""
-    var select = arguments[0];
-    select.value = 'Yes';
-    $(select).trigger('change');
-""", select_element)
-print("✅ Selected 'Yes' from Application For dropdown")
+
+
 
 # Wait for the observation textarea to be present
 observation_box = wait.until(
@@ -852,7 +814,7 @@ observation_box = wait.until(
 driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].focus();", observation_box)
 
 # Clear and set the comment safely using JS
-driver.execute_script("arguments[0].value = 'Proced forward to Assessor (HO)';", observation_box)
+driver.execute_script("arguments[0].value = 'Proced forward to Data Entry Officer (LOD)';", observation_box)
 
 # Trigger input/change events so the system recognizes it
 driver.execute_script("""
@@ -956,31 +918,22 @@ driver.execute_script("arguments[0].click();", confirm_button)
 print("✅ Confirm button clicked")
 
 
-# CIF number selection
-Cif_number = wait.until(
-    EC.presence_of_element_located((By.ID, "form_instance_data_1921324091780894720"))
-)
-Cif_number.clear()
-Cif_number.send_keys("12345")
-print("✅ CIF Number filled: 12345")
+# # CIF number selection
+# Cif_number = wait.until(
+#     EC.presence_of_element_located((By.ID, "form_instance_data_1921633941589069824"))
+# )
+# Cif_number.clear()
+# Cif_number.send_keys("12345")
+# print("✅ CIF Number filled: 12345")
 
 
-# Confirm CIF number selection
-Cif_number = wait.until(
-    EC.presence_of_element_located((By.ID, "form_instance_data_1921324318051012608"))
-)
-Cif_number.clear()
-Cif_number.send_keys("12345")
-print("✅ CIF Number filled: 12345")
-
-
-# Confirm Account number selection
-Cif_number = wait.until(
-    EC.presence_of_element_located((By.ID, "form_instance_data_1921324924367015936"))
-)
-Cif_number.clear()
-Cif_number.send_keys("1234567891012")
-print("✅ CIF Number filled: 1234567891012")
+# # Confirm Account number selection
+# confirm_account_number = wait.until(
+#     EC.presence_of_element_located((By.ID, "form_instance_data_1921636228344582144"))
+# )
+# confirm_account_number.clear()
+# confirm_account_number.send_keys("1234567891012")
+# print("✅ Confirm Account Number filled: 1234567891012")
 
 # Wait for the observation textarea to be present
 observation_box = wait.until(
@@ -992,7 +945,7 @@ observation_box = wait.until(
 driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].focus();", observation_box)
 
 # Clear and set the comment safely using JS
-driver.execute_script("arguments[0].value = 'Proced forward to Data Entry Officer (HO)';", observation_box)
+driver.execute_script("arguments[0].value = 'Proced forward to Authorizer (LOD)';", observation_box)
 
 # Trigger input/change events so the system recognizes it
 driver.execute_script("""
@@ -1102,7 +1055,7 @@ observation_box = wait.until(
 driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].focus();", observation_box)
 
 # Clear and set the comment safely using JS
-driver.execute_script("arguments[0].value = 'Proced forward to Authorizer (HO)';", observation_box)
+driver.execute_script("arguments[0].value = 'Workflow Completed';", observation_box)
 
 # Trigger input/change events so the system recognizes it
 driver.execute_script("""
@@ -1115,237 +1068,15 @@ print("✅ Comment added in observation box")
 sleep(5)
 
 
-# Wait for the 'Send Backward' button to be clickable
-proced_forward_button = wait.until(
-    EC.element_to_be_clickable((By.XPATH, "//button[contains(text(),'Proceed Forward')]"))
+# Wait for the 'Complete Workflow' button to be clickable
+Complete_button = wait.until(
+    EC.element_to_be_clickable((By.XPATH, "//button[contains(text(),'Complete Workflow')]"))
 )
 
 # Scroll into view and click via JS
-driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].click();", proced_forward_button)
+driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].click();", Complete_button)
 
-print("✅ 'Proceed Forward' button clicked successfully")
-
-# Wait for the confirmation alert
-try:
-    alert = WebDriverWait(driver, 10).until(EC.alert_is_present())
-    print("⚠ Confirmation alert appeared:", alert.text)
-
-    # Click OK
-    alert.accept()
-    print("✅ 'OK' clicked on Proceed Forward confirmation")
-
-except TimeoutException:
-    print("ℹ No confirmation alert appeared")
-
-force_logout()
-
-#Open login page
-driver.get("http://27.147.184.165:8082/")
-
-
-# Wait and enter username
-wait.until(EC.presence_of_element_located((By.NAME, "_username"))).send_keys("dee-cor-unit-con")
-
-# Enter password
-wait.until(EC.presence_of_element_located((By.NAME, "_password"))).send_keys("Mtb@12345678910")
-
-# Click login button (important)
-login_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@type='submit']")))
-login_button.click()
-
-# Wait until homepage/dashboard loads
-wait.until(EC.url_changes("http://27.147.184.165:8082/login"))
-
-print("✅ Successfully logged in")
-
-driver.get("http://27.147.184.165:8082/workflow/groups-list")
-wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-print("✅ Groups Workflow page loaded")
-
-# Load tracking number from file
-with open("tracking_no.txt", "r") as f:
-    tracking_no = f.read().strip()
-
-print(f"📥 Loaded Tracking Number: {tracking_no}")
-
-# Wait for Tracking input
-tracking_input = wait.until(
-    EC.element_to_be_clickable((By.ID, "form_workflow_filter_workflow"))
-)
-
-tracking_input.clear()
-tracking_input.send_keys(tracking_no)
-print("✅ Tracking number entered")
-
-# Click Search
-search_button = wait.until(
-    EC.element_to_be_clickable((
-        By.XPATH,
-        "//button[contains(text(),'Search') or contains(text(),'Filter')]"
-    ))
-)
-
-driver.execute_script("arguments[0].click();", search_button)
-print("✅ Search executed successfully")
-
-
-accept_button = wait.until(
-    EC.element_to_be_clickable((By.XPATH, "//a[contains(@class,'accept') and contains(text(),'Accept')]"))
-)
-
-driver.execute_script("arguments[0].click();", accept_button)
-print("✅ Accept button clicked")
-
-
-# Click Confirm inside modal
-confirm_button = wait.until(
-    EC.element_to_be_clickable((By.XPATH, "//a[contains(@class,'confirm')]"))
-)
-driver.execute_script("arguments[0].click();", confirm_button)
-print("✅ Confirm button clicked")
-
-
-# Wait for the observation textarea to be present
-observation_box = wait.until(
-    EC.presence_of_element_located((By.ID, "form_instance_observation"))
-)
-
-
-# Scroll into view and focus
-driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].focus();", observation_box)
-
-# Clear and set the comment safely using JS
-driver.execute_script("arguments[0].value = 'Proced forward to DEE(Correspondence Unit)(HO)';", observation_box)
-
-# Trigger input/change events so the system recognizes it
-driver.execute_script("""
-arguments[0].dispatchEvent(new Event('input', { bubbles: true }));
-arguments[0].dispatchEvent(new Event('change', { bubbles: true }));
-""", observation_box)
-
-print("✅ Comment added in observation box")
-
-
-# Wait for the 'Send Backward' button to be clickable
-proced_forward_button = wait.until(
-    EC.element_to_be_clickable((By.XPATH, "//button[contains(text(),'Proceed Forward')]"))
-)
-
-# Scroll into view and click via JS
-driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].click();", proced_forward_button)
-
-print("✅ 'Proceed Forward' button clicked successfully")
-
-# Wait for the confirmation alert
-try:
-    alert = WebDriverWait(driver, 10).until(EC.alert_is_present())
-    print("⚠ Confirmation alert appeared:", alert.text)
-
-    # Click OK
-    alert.accept()
-    print("✅ 'OK' clicked on Proceed Forward confirmation")
-
-except TimeoutException:
-    print("ℹ No confirmation alert appeared")
-
-force_logout()
-
-#Open login page
-driver.get("http://27.147.184.165:8082/")
-
-
-# Wait and enter username
-wait.until(EC.presence_of_element_located((By.NAME, "_username"))).send_keys("ao-cor-unit-con")
-
-# Enter password
-wait.until(EC.presence_of_element_located((By.NAME, "_password"))).send_keys("Mtb@12345678910")
-
-# Click login button (important)
-login_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@type='submit']")))
-login_button.click()
-
-# Wait until homepage/dashboard loads
-wait.until(EC.url_changes("http://27.147.184.165:8082/login"))
-
-print("✅ Successfully logged in")
-
-driver.get("http://27.147.184.165:8082/workflow/groups-list")
-wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-print("✅ Groups Workflow page loaded")
-
-# Load tracking number from file
-with open("tracking_no.txt", "r") as f:
-    tracking_no = f.read().strip()
-
-print(f"📥 Loaded Tracking Number: {tracking_no}")
-
-# Wait for Tracking input
-tracking_input = wait.until(
-    EC.element_to_be_clickable((By.ID, "form_workflow_filter_workflow"))
-)
-
-tracking_input.clear()
-tracking_input.send_keys(tracking_no)
-print("✅ Tracking number entered")
-
-# Click Search
-search_button = wait.until(
-    EC.element_to_be_clickable((
-        By.XPATH,
-        "//button[contains(text(),'Search') or contains(text(),'Filter')]"
-    ))
-)
-
-driver.execute_script("arguments[0].click();", search_button)
-print("✅ Search executed successfully")
-
-
-accept_button = wait.until(
-    EC.element_to_be_clickable((By.XPATH, "//a[contains(@class,'accept') and contains(text(),'Accept')]"))
-)
-
-driver.execute_script("arguments[0].click();", accept_button)
-print("✅ Accept button clicked")
-
-
-# Click Confirm inside modal
-confirm_button = wait.until(
-    EC.element_to_be_clickable((By.XPATH, "//a[contains(@class,'confirm')]"))
-)
-driver.execute_script("arguments[0].click();", confirm_button)
-print("✅ Confirm button clicked")
-
-
-# Wait for the observation textarea to be present
-observation_box = wait.until(
-    EC.presence_of_element_located((By.ID, "form_instance_observation"))
-)
-
-
-# Scroll into view and focus
-driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].focus();", observation_box)
-
-# Clear and set the comment safely using JS
-driver.execute_script("arguments[0].value = 'Proced forward to Authorizer (HO)';", observation_box)
-
-# Trigger input/change events so the system recognizes it
-driver.execute_script("""
-arguments[0].dispatchEvent(new Event('input', { bubbles: true }));
-arguments[0].dispatchEvent(new Event('change', { bubbles: true }));
-""", observation_box)
-
-print("✅ Comment added in observation box")
-
-
-# Wait for the 'Send Backward' button to be clickable
-proced_forward_button = wait.until(
-    EC.element_to_be_clickable((By.XPATH, "//button[contains(text(),'Proceed Forward')]"))
-)
-
-# Scroll into view and click via JS
-driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].click();", proced_forward_button)
-
-print("✅ 'Proceed Forward' button clicked successfully")
+print("✅ 'Complete Workflow' button clicked successfully")
 
 # Wait for the confirmation alert
 try:
