@@ -1,5 +1,4 @@
 import datetime
-
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -58,7 +57,7 @@ print("✅ Clicked on New Workflow")
 row = wait.until(
     EC.presence_of_element_located((
         By.XPATH,
-        "//tr[td[contains(text(),'Account Closing (NIBW)_{LOU-14}')]]"
+        "//tr[td[contains(text(),'Account Closing (Islamic)_{LOU-13}')]]"
     ))
 )
 
@@ -70,7 +69,7 @@ start_button = row.find_element(By.XPATH, ".//a[contains(@class,'start')]")
 # Click using JS (more reliable than normal click)
 driver.execute_script("arguments[0].click();", start_button)
 
-print("✅ Start button clicked for Account Closing (NIBW)_{LOU-14}')")
+print("✅ Start button clicked for  Account Closing (Islamic)_{LOU-13}')")
 
 # Wait for Bootbox modal to appear
 yes_button = WebDriverWait(driver, 20).until(
@@ -116,8 +115,18 @@ cif_number.send_keys("123456789101234")
 print("✅ CIF Number filled: 123456789101234")
 
 
+# # Account Opening date - fill with today's current date
+# today_date = datetime.now().strftime("%d-%m-%Y") 
+# account_opening_date = wait.until(
+#     EC.presence_of_element_located((By.ID, "form_instance_data_1925818764587175936"))
+# )
+# account_opening_date.clear()
+# account_opening_date.send_keys(today_date)
+# print(f"✅ Account Opening Date filled: {today_date}")
 
-# Select "Quick Account" from Account Type dropdown
+
+
+# Select "Account Type" from Account Type dropdown
 select_element = driver.find_element(By.ID, "form_instance_data_1926844207071236096")
 driver.execute_script("""
     var select = arguments[0];
@@ -127,7 +136,6 @@ driver.execute_script("""
 print("✅ Selected 'Others A/C' from Account Type dropdown")
 
 
-
 # Select "Customer Type" from Account Type dropdown
 select_element = driver.find_element(By.ID, "form_instance_data_1926844592104148992")
 driver.execute_script("""
@@ -135,37 +143,37 @@ driver.execute_script("""
     select.value = 'WBD';
     $(select).trigger('change');
 """, select_element)
-print("✅ Selected 'WBD ' from Customer Type dropdown")
+print("✅ Selected 'WBD' from Customer Type dropdown")
 
 
 # Select "Account Product Type" from dropdown
 select_element = driver.find_element(By.ID, "form_instance_data_1926845262907576320")
 driver.execute_script("""
     var select = arguments[0];
-    select.value = '102 - Yaqeen Employee Savings Account';
+    select.value = '131 - Al – Wadee’ah Current Account (Individual)';
     $(select).trigger('change');
 """, select_element)
-print("✅ Selected '102 - Yaqeen Employee Savings Account' from Account Product Type dropdown")
+print("✅ Selected '131 - Al – Wadee’ah Current Account (Individual)' from Account Product Type dropdown")
 
 
 # Select "Customer Account Type" from Account Type dropdown
 select_element = driver.find_element(By.ID, "form_instance_data_1932729259516760064")
 driver.execute_script("""
     var select = arguments[0];
-    select.value = 'Joint Account Holders';
+    select.value = 'Customers, Who Want to Open Non-Resident Bangladeshi (NRB) Account';
     $(select).trigger('change');
 """, select_element)
-print("✅ Selected 'Joint Account Holders' from Customer Account Type dropdown")
+print("✅ Selected 'Customers, Who Want to Open Non-Resident Bangladeshi (NRB) Account' from Customer Type dropdown")
 
 
 # Select "Type of Banking Account" from Account Type dropdown
 select_element = driver.find_element(By.ID, "form_instance_data_1932730192636153856")
 driver.execute_script("""
     var select = arguments[0];
-    select.value = 'Term deposit : Individual';
+    select.value = 'Transactional Account : Non-Individual';
     $(select).trigger('change');
 """, select_element)
-print("✅ Selected 'Term deposit : Individual' from Type of Banking Account dropdown")
+print("✅ Selected 'Transactional Account : Non-Individual' from Type of Banking Account dropdown")
 
 
 # Wait for Upload button to be clickable
@@ -373,7 +381,7 @@ observation_box = wait.until(
 driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].focus();", observation_box)
 
 # Clear and set the comment safely using JS
-driver.execute_script("arguments[0].value = 'Document added. Proceed forward to Step - 2 (Authorizer-Branch)';", observation_box)
+driver.execute_script("arguments[0].value = 'Document added. Proceed forward to Step - 2 Branch DM (LOU)';", observation_box)
 
 # Trigger input/change events so the system recognizes it
 driver.execute_script("""
@@ -678,7 +686,7 @@ driver.get("http://27.147.184.165:8082/")
 
 
 # Wait and enter username
-wait.until(EC.presence_of_element_located((By.NAME, "_username"))).send_keys("distributor-nibw")
+wait.until(EC.presence_of_element_located((By.NAME, "_username"))).send_keys("distributor-ibw")
 
 # Enter password
 wait.until(EC.presence_of_element_located((By.NAME, "_password"))).send_keys("Mtb@12345678910")
@@ -801,7 +809,7 @@ driver.get("http://27.147.184.165:8082/")
 
 
 # Wait and enter username
-wait.until(EC.presence_of_element_located((By.NAME, "_username"))).send_keys("assessor-nibw")
+wait.until(EC.presence_of_element_located((By.NAME, "_username"))).send_keys("assessor-ibw")
 
 # Enter password
 wait.until(EC.presence_of_element_located((By.NAME, "_password"))).send_keys("Mtb@12345678910")
@@ -922,10 +930,10 @@ driver.get("http://27.147.184.165:8082/")
 
 
 # Wait and enter username
-wait.until(EC.presence_of_element_located((By.NAME, "_username"))).send_keys("dee-lod-nibw")
+wait.until(EC.presence_of_element_located((By.NAME, "_username"))).send_keys("dee-lod-ibw")
 
 # Enter password
-wait.until(EC.presence_of_element_located((By.NAME, "_password"))).send_keys("Mtb@12345678910")
+wait.until(EC.presence_of_element_located((By.NAME, "_password"))).send_keys("Mtb@12345678913")
 
 # Click login button (important)
 login_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@type='submit']")))
@@ -1042,10 +1050,10 @@ driver.get("http://27.147.184.165:8082/")
 
 
 # Wait and enter username
-wait.until(EC.presence_of_element_located((By.NAME, "_username"))).send_keys("ao-nibw")
+wait.until(EC.presence_of_element_located((By.NAME, "_username"))).send_keys("ao-ibw")
 
 # Enter password
-wait.until(EC.presence_of_element_located((By.NAME, "_password"))).send_keys("Mtb@12345678910")
+wait.until(EC.presence_of_element_located((By.NAME, "_password"))).send_keys("Mtb@12345678913")
 
 # Click login button (important)
 login_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@type='submit']")))
@@ -1113,7 +1121,7 @@ observation_box = wait.until(
 driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].focus();", observation_box)
 
 # Clear and set the comment safely using JS
-driver.execute_script("arguments[0].value = 'Proced forward to Authorizer (HO)';", observation_box)
+driver.execute_script("arguments[0].value = 'Workflow Completed';", observation_box)
 
 # Trigger input/change events so the system recognizes it
 driver.execute_script("""

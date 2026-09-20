@@ -1,5 +1,4 @@
 import datetime
-
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -58,7 +57,7 @@ print("✅ Clicked on New Workflow")
 row = wait.until(
     EC.presence_of_element_located((
         By.XPATH,
-        "//tr[td[contains(text(),'Term deposit : Servicing (NIBW)_{LOU-11}')]]"
+        "//tr[td[contains(text(),'Term deposit : Servicing (IBW)_{LOU-11}')]]"
     ))
 )
 
@@ -70,7 +69,7 @@ start_button = row.find_element(By.XPATH, ".//a[contains(@class,'start')]")
 # Click using JS (more reliable than normal click)
 driver.execute_script("arguments[0].click();", start_button)
 
-print("✅ Start button clicked for Term deposit : Servicing (NIBW)_{LOU-11}')")
+print("✅ Start button clicked for Term deposit : Servicing (IBW)_{LOU-11}')")
 
 # Wait for Bootbox modal to appear
 yes_button = WebDriverWait(driver, 20).until(
@@ -114,6 +113,16 @@ cif_number = wait.until(
 cif_number.clear()
 cif_number.send_keys("123456789101234")
 print("✅ CIF Number filled: 123456789101234")
+
+
+# # Account Opening date - fill with today's current date
+# today_date = datetime.now().strftime("%d-%m-%Y") 
+# account_opening_date = wait.until(
+#     EC.presence_of_element_located((By.ID, "form_instance_data_1925818764587175936"))
+# )
+# account_opening_date.clear()
+# account_opening_date.send_keys(today_date)
+# print(f"✅ Account Opening Date filled: {today_date}")
 
 
 
@@ -244,7 +253,7 @@ driver.execute_script("""
     select.value = '1942156922287296512';
     $(select).trigger('change');
 """, doc_type_select)
-print("✅ Document Type selected: Customer Application")
+print("✅ Document Type selected: Customer Application Form")
 
 create_button = wait.until(
     EC.element_to_be_clickable((By.ID, "create-document-button"))
@@ -362,7 +371,7 @@ observation_box = wait.until(
 driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].focus();", observation_box)
 
 # Clear and set the comment safely using JS
-driver.execute_script("arguments[0].value = 'Document added. Proceed forward to Step - 2 (Authorizer-Branch)';", observation_box)
+driver.execute_script("arguments[0].value = 'Document added. Proceed forward to Step - 2 Branch DM (LOU)';", observation_box)
 
 # Trigger input/change events so the system recognizes it
 driver.execute_script("""
@@ -667,7 +676,7 @@ driver.get("http://27.147.184.165:8082/")
 
 
 # Wait and enter username
-wait.until(EC.presence_of_element_located((By.NAME, "_username"))).send_keys("distributor-nibw")
+wait.until(EC.presence_of_element_located((By.NAME, "_username"))).send_keys("distributor-ibw")
 
 # Enter password
 wait.until(EC.presence_of_element_located((By.NAME, "_password"))).send_keys("Mtb@12345678910")
@@ -790,7 +799,7 @@ driver.get("http://27.147.184.165:8082/")
 
 
 # Wait and enter username
-wait.until(EC.presence_of_element_located((By.NAME, "_username"))).send_keys("assessor-nibw")
+wait.until(EC.presence_of_element_located((By.NAME, "_username"))).send_keys("assessor-ibw")
 
 # Enter password
 wait.until(EC.presence_of_element_located((By.NAME, "_password"))).send_keys("Mtb@12345678910")
@@ -911,10 +920,10 @@ driver.get("http://27.147.184.165:8082/")
 
 
 # Wait and enter username
-wait.until(EC.presence_of_element_located((By.NAME, "_username"))).send_keys("dee-lod-nibw")
+wait.until(EC.presence_of_element_located((By.NAME, "_username"))).send_keys("dee-lod-ibw")
 
 # Enter password
-wait.until(EC.presence_of_element_located((By.NAME, "_password"))).send_keys("Mtb@12345678910")
+wait.until(EC.presence_of_element_located((By.NAME, "_password"))).send_keys("Mtb@12345678913")
 
 # Click login button (important)
 login_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@type='submit']")))
@@ -1031,10 +1040,10 @@ driver.get("http://27.147.184.165:8082/")
 
 
 # Wait and enter username
-wait.until(EC.presence_of_element_located((By.NAME, "_username"))).send_keys("ao-nibw")
+wait.until(EC.presence_of_element_located((By.NAME, "_username"))).send_keys("ao-ibw")
 
 # Enter password
-wait.until(EC.presence_of_element_located((By.NAME, "_password"))).send_keys("Mtb@12345678910")
+wait.until(EC.presence_of_element_located((By.NAME, "_password"))).send_keys("Mtb@12345678913")
 
 # Click login button (important)
 login_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@type='submit']")))
@@ -1102,7 +1111,7 @@ observation_box = wait.until(
 driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].focus();", observation_box)
 
 # Clear and set the comment safely using JS
-driver.execute_script("arguments[0].value = 'Workflow Completed ';", observation_box)
+driver.execute_script("arguments[0].value = 'Workflow Completed';", observation_box)
 
 # Trigger input/change events so the system recognizes it
 driver.execute_script("""

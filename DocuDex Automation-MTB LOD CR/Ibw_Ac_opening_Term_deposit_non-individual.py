@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -1010,7 +1009,7 @@ print("✅ Confirm button clicked")
 observation_box = wait.until(
     EC.presence_of_element_located((By.ID, "form_instance_observation"))
 )
-
+432
 
 # Scroll into view and focus
 driver.execute_script("arguments[0].scrollIntoView({block:'center'}); arguments[0].focus();", observation_box)
